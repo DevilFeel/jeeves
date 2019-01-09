@@ -9,6 +9,7 @@ import com.cherry.jeeves.enums.StatusNotifyCode;
 import com.cherry.jeeves.exception.WechatException;
 import com.cherry.jeeves.exception.WechatQRExpiredException;
 import com.cherry.jeeves.utils.QRCodeUtils;
+import com.cherry.jeeves.utils.StarFileUtils;
 import com.cherry.jeeves.utils.WechatUtils;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.WriterException;
@@ -53,6 +54,10 @@ public class LoginService {
             logger.info("[1] uuid completed");
             //2 qr
             byte[] qrData = wechatHttpServiceInternal.getQR(uuid);
+            // 打开图片 提供扫码
+            StarFileUtils.buffer2File(qrData, "qrdata.png");
+            Runtime.getRuntime().exec("cmd /c qrdata.png");
+            
             ByteArrayInputStream stream = new ByteArrayInputStream(qrData);
             String qrUrl = QRCodeUtils.decode(stream);
             stream.close();
